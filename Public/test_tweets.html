@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<title> JSON Displayer </title>
+		<script src='http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js'> </script>
+		<style>
+			body {
+				padding: 16px;
+				font-family: 'Tahoma', Geneva, sans-serif;
+			}
+			#search_query {
+				border-width: 1.5px;
+				border-radius: 4px;
+				border-color: #ddd;
+				background-color: #fff;
+				font-size: 16px;
+				padding: 12px;
+			}
+			#search {
+				border-width: 1.5px;
+				border-radius: 4px;
+				border-color: #ddd;
+				background-color: #fff;
+				font-size: 16px;
+				padding: 12px;
+			}
+			#search:hover {
+				cursor: pointer;
+				background-color: #fbfbfb;
+			}
+			#error {
+				margin-top: 32px;
+				margin-bottom: 32px;
+				color: #d00;
+			}
+			#response {
+				font-family: 'Lucida Console', Monaco, monospace;
+			}
+			#loader {
+				margin-top: 32px;
+				margin-bottom: 32px;
+				border: 12px solid #f3f3f3;
+				border-top: 12px solid #3498db;
+				border-radius: 50%;
+				width: 48px;
+				height: 48px;
+				-webkit-animation: spin 2s linear infinite;
+				animation: spin 2s linear infinite;
+			}
+			@-webkit-keyframes spin {
+				0% { -webkit-transform: rotate(0deg); }
+				100% { -webkit-transform: rotate(360deg); }
+			}
+			@keyframes spin {
+				0% { transform: rotate(0deg); }
+				100% { transform: rotate(360deg); }
+			}
+			div.fold {
+				margin-top: 8px;
+				margin-left: 32px;
+				margin-bottom: 8px;
+			}
+			button.fold {
+				height: 100%;
+				border-width: 0px;
+				border-radius: 4px;
+				color: #fff;
+				background-color: #ddf;
+				font-weight: bolder;
+				text-decoration: none;
+				margin-left: 8px;
+				margin-right: 8px;
+			}
+			button.fold:hover {
+				cursor: pointer;
+				background-color: #bbf;
+			}
+		</style>
+		<script>
+			
+			// generates foldable HTML from a JSON object
+			// returns the HTML as a string
+			function fold_obj(obj) {
+				var strings;
+				
+				// null
+				if (obj === null) {
+					return 'null';
+					
+				// true boolean
+				} else if (obj === true) {
+					return 'true';
+					
+				// false boolean
+				} else if (obj === false) {
+					return 'false';
+					
+				// string
+				} else if (typeof obj === 'number') {
+					return obj.toString();
+					
+				// string
+				} else if (typeof obj === 'string' || obj instanceof String) {
+					return '"' + obj + '"';
+					
+				// array
+				} else if (obj instanceof Array) {
+					if (obj.length === 0) {
+						return '[]';
+					}
+					
+					strings = [];
+					strings.push('[<button class="fold">~</button><span class="fold">');
+					obj.forEach(function(elem, i) {
+						if (i === 0) {
+							strings.push('<div class="fold">');
+						} else {
+							strings.push(',</div><div class="fold">');
+						}
+						strings.push(fold_obj(elem));
+					});
+					strings.push('</div></span>]');
+					return strings.join('');
+					
+				// empty object
+			} else if ($.isEmptyObject(obj)) {
+					return '{}';
+					
+				// non-empty object
+				} else {
+					strings = [];
+					strings.push('{<button class="fold">~</button><span class="fold">');
+					Object.keys(obj).forEach(function(key, i) {
+						if (i === 0) {
+							strings.push('<div class="fold">"' + key + '": ');
+						} else {
+							strings.push(',</div><div class="fold">"' + key + '": ');
+						}
+						strings.push(fold_obj(obj[key]));
+					});
+					strings.push('</div></span>}');
+					return strings.join('');
+				}
+			}
+			
+			function setup_folds() {
+				$('button.fold').each(function() {
+					var e = $(this).next('span');
+					$(this).html('+');
+					e.hide();
+					
+					$(this).click(function() {
+						var e = $(this).next('span');
+						if (e.is(':visible')) {
+							$(this).html('+');
+							e.hide();
+						} else {
+							$(this).html('~');
+							e.show();
+						}
+					});
+				});
+			}
+			
+			function get_data() {
+				$('#loader').show();
+				
+				var number = 5;
+				var search_query = $('#search_query').val() || 'kangaroo';
+				
+				function success(data) {
+					$('#loader').hide();
+					$('#error').html('');
+					$('#response').html(fold_obj(data));
+					setup_folds();
+				}
+				
+				function error(xhr, opts, error) {
+					$('#loader').hide();
+					$('#error').html('Error: ' + xhr.responseText);
+				}
+				
+				$.ajax({
+					type : 'GET',
+					url : './run',
+					contentType : 'application/json; charset=utf-8',
+					data : {
+						'search_query' : search_query
+					},
+					dataType : 'json',
+					success : success,
+					error : error
+				});
+			}
+			
+			$(document).ready(function() {
+				get_data();
+			});
+			
+		</script>
+	</head>
+	<body>
+		
+		<input id='search_query' type='text' placeholder='Search for "kangaroo"'/>
+		<button id='search' onclick="get_data()"> Search </button>
+		<div id='loader'></div>
+		<div id='error'></div>
+		<div id='response'></div>
+		
+	</body>
+</html>

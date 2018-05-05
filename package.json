@@ -1,0 +1,27 @@
+{
+  "name": "viewbase",
+  "version": "1.0.0",
+  "description": "**viewBase** is the best CS 275 project to ever be conceived, *ever*.",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.15.2",
+    "mysql": "^2.13.0",
+    "node-fetch": "^1.6.3",
+    "request": "^2.81.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/crb233/viewBase.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/crb233/viewBase/issues"
+  },
+  "homepage": "https://github.com/crb233/viewBase#readme"
+}

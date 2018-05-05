@@ -1,0 +1,89 @@
+<html>
+  <head>
+	<title>viewBase</title>
+	<style>
+		body {
+			background-color: black;
+			height: 100%;
+			min-width: 1000px;
+			font-family: "Tahoma", Geneva, sans-serif;
+			font-size: 14px;
+			background-color: black;
+			color: white;
+		}
+		h1, h2, h3 {
+			text-align: center;
+		}
+		h1 {
+			font-size: 32px;
+		}
+		#top {
+			overflow: auto;
+			width: 13%;
+			color: white;
+			font-size: 12px;
+			display: inline-block;
+			vertical-align: top;
+		}
+		#map {
+			width: 700px;
+			height: 433px;
+			width: 74%;
+			display: inline-block;
+		}
+		#map-error {
+			color: red;
+			font-size: 80%;
+		}
+		#submission	{
+			width: 20%;
+			margin-left: auto;
+			margin-right: auto;
+		}
+		input {
+			border-color: white;
+			border-width: 2px;
+			border-radius: 4px;
+			background-color: black;
+			padding: 8px;
+			color: white;
+		}
+		button {
+			border-color: white;
+			border-width: 2px;
+			border-radius: 4px;
+			background-color: black;
+			padding: 8px;
+			color: white;
+		}
+		#container {
+			width: 98%;
+			margin-left: auto;
+			margin-right: auto;
+			text-align: center;
+		}
+		#container > div {
+			text-align: left;
+		}
+	</style>
+	
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	<script type="text/javascript" src="jslogic.js"></script>
+	
+  </head>
+  <body onload="onLoad()">
+	<div id="container">
+		<h1>viewBase</h1>
+		<div id="submission">
+			<input type="text" id="hashtag" placeholder="Search..."></input>
+			<button id="submit" onclick="sendHashtag()">Submit</button>
+		</div>
+		<div id="map">
+			<div id="map-error"></div>
+			<div id="geochart-colors"></div>
+		</div id="map">
+		<div id="top"></div>
+	</div>
+ </body>
+</html>
